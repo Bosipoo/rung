@@ -4,7 +4,7 @@
 // (lib/storage.ts) per the architecture rule: curriculum is shared, progress
 // is per-user.
 
-import { curriculum, weekTasks, type Task, type Week } from "@/content/curriculum";
+import { curriculum, taskUnits, weekTasks, type Task, type Week } from "@/content/curriculum";
 
 export function getWeeks(): Week[] {
   return curriculum.weeks;
@@ -19,11 +19,11 @@ export function getTasks(weekId: number): Task[] {
   return week ? weekTasks(week) : [];
 }
 
-// Rest days aren't something to "complete", so they're excluded here — and
-// must stay excluded from any completed-task count too.
-export function getTotalTaskCount(): number {
+// Progress counts tickable units (lesson items, exercises, prove-it), not
+// tasks — taskUnits() already returns 0 for rest days.
+export function getTotalUnitCount(): number {
   return curriculum.weeks.reduce(
-    (total, week) => total + weekTasks(week).filter((task) => task.kind !== "rest").length,
+    (total, week) => total + weekTasks(week).reduce((sum, task) => sum + taskUnits(task), 0),
     0,
   );
 }

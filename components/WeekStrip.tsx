@@ -4,7 +4,7 @@ import Link from "next/link";
 import type { Task } from "@/content/curriculum";
 import { getTasks, getWeek } from "@/lib/queries";
 import { useCurrentWeek } from "@/hooks/useCurrentWeek";
-import { useTaskComplete } from "@/hooks/useTaskComplete";
+import { useDayDone } from "@/hooks/useDayDone";
 import { useTodayDayNumber } from "@/hooks/useTodayDayNumber";
 import { weekdayShort } from "@/lib/dates";
 import { BuildLine } from "@/components/BuildLine";
@@ -53,11 +53,13 @@ function DayCell({
   task: Task;
   isToday: boolean;
 }) {
-  const [done] = useTaskComplete(weekNumber, task.day);
+  const done = useDayDone(weekNumber, task);
 
   return (
     <Link
       href={`/week/${weekNumber}/day/${task.day}`}
+      data-testid={`day-strip-${task.day}`}
+      data-done={done}
       className={`relative flex min-h-[92px] flex-col gap-1 rounded-xl border p-2.5 ${
         isToday ? "border-amber bg-amber-soft" : "border-line bg-panel"
       } ${done ? "opacity-55" : ""}`}

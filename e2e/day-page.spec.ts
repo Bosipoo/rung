@@ -8,10 +8,10 @@ test("the challenge day renders the drill code with a hidden solution that revea
 
   const revealButton = page.getByRole("button", { name: "Reveal solution" });
   await expect(revealButton).toBeVisible();
-  await expect(page.getByText("age is text")).toHaveCount(0);
+  await expect(page.getByText("is missing the +")).toHaveCount(0);
 
   await revealButton.click();
-  await expect(page.getByText("age is text")).toBeVisible();
+  await expect(page.getByText("is missing the +")).toBeVisible();
 });
 
 test("next-day navigation crosses a week boundary", async ({ page }) => {

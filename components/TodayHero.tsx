@@ -1,13 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import type { TaskKind } from "@/content/curriculum";
+import type { Task, TaskKind } from "@/content/curriculum";
 import { getTasks, getWeek } from "@/lib/queries";
 import { useCurrentWeek } from "@/hooks/useCurrentWeek";
-import { useTaskComplete } from "@/hooks/useTaskComplete";
+import { useDayDone } from "@/hooks/useDayDone";
 import { useTodayDayNumber } from "@/hooks/useTodayDayNumber";
-import { splitInstruction } from "@/lib/instruction";
-import { parsePushTarget } from "@/lib/pushTarget";
 import { weekdayName } from "@/lib/dates";
 
 const KIND_LABEL: Record<TaskKind, string> = {
@@ -18,17 +16,18 @@ const KIND_LABEL: Record<TaskKind, string> = {
   rest: "Rest",
 };
 
+const FALLBACK_TASK: Task = { day: 0, kind: "rest", title: "", concept: "" };
+
 export function TodayHero() {
   const weekNumber = useCurrentWeek() ?? 1;
   const today = useTodayDayNumber();
   const week = getWeek(weekNumber);
   const task = week ? getTasks(weekNumber).find((t) => t.day === today) : undefined;
-  const [done, toggle] = useTaskComplete(weekNumber, task?.day ?? 0);
+  const done = useDayDone(weekNumber, task ?? FALLBACK_TASK);
 
   if (!week || !task) return null;
 
-  const { body, proveIt } = splitInstruction(task.instruction);
-  const pushTarget = parsePushTarget(task.instruction);
+  const primaryResource = task.lesson?.[0];
 
   return (
     <section className="rounded-2xl border border-amber/45 bg-amber-soft p-6">
@@ -41,36 +40,34 @@ export function TodayHero() {
           {task.title}
         </Link>
       </h1>
-      <p className="mt-1 max-w-xl text-muted">{body}</p>
-      {proveIt && (
+      <p className="mt-1 max-w-xl text-muted">{task.concept}</p>
+      {task.prove && (
         <div className="mt-4 rounded-r-xl border-l-2 border-cyan bg-cyan/5 px-4 py-3">
           <span className="font-mono text-xs uppercase text-cyan">Prove it</span>
-          <p className="mt-1 text-sm">{proveIt}</p>
+          <p className="mt-1 text-sm">{task.prove}</p>
         </div>
       )}
       <div className="mt-4 flex flex-wrap items-center gap-3">
-        {task.resource && (
+        {primaryResource && (
           <a
-            href={task.resource.url}
+            href={primaryResource.url}
             target="_blank"
             rel="noopener noreferrer"
             className="rounded-xl bg-cyan px-4 py-2.5 text-sm font-semibold text-background"
           >
-            Open {task.resource.label}
+            Open {primaryResource.label}
           </a>
         )}
         {task.kind !== "rest" && (
-          <button
-            type="button"
-            onClick={toggle}
+          <span
             className={`rounded-xl border px-4 py-2.5 text-sm font-semibold ${
-              done ? "border-green text-green" : "border-line-2 text-foreground"
+              done ? "border-green text-green" : "border-line-2 text-muted"
             }`}
           >
-            {done ? "✓ Done for today" : "Mark done"}
-          </button>
+            {done ? "✓ Done" : "Not done yet"}
+          </span>
         )}
-        {pushTarget && <span className="ml-auto font-mono text-xs text-dim">push → {pushTarget}</span>}
+        {task.push && <span className="ml-auto font-mono text-xs text-dim">push → {task.push}</span>}
       </div>
     </section>
   );

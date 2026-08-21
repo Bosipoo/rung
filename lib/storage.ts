@@ -57,20 +57,18 @@ export function setCurrentWeek(week: number): void {
   write(KEYS.currentWeek, week);
 }
 
-// --- task completion ----------------------------------------------------------
+// --- unit completion ------------------------------------------------------
+// Keys are opaque strings built by lib/units.ts (e.g. "3:2:lesson:0",
+// "3:2:ex:1", "3:2:prove") — storage doesn't need to know their shape.
 
-function taskKey(week: number, day: number): string {
-  return `${week}-${day}`;
+export function isUnitComplete(key: string): boolean {
+  const map = read<TaskCompletionMap>(KEYS.taskCompletion, {});
+  return map[key] ?? false;
 }
 
-export function isTaskComplete(week: number, day: number): boolean {
+export function setUnitComplete(key: string, complete: boolean): void {
   const map = read<TaskCompletionMap>(KEYS.taskCompletion, {});
-  return map[taskKey(week, day)] ?? false;
-}
-
-export function setTaskComplete(week: number, day: number, complete: boolean): void {
-  const map = read<TaskCompletionMap>(KEYS.taskCompletion, {});
-  map[taskKey(week, day)] = complete;
+  map[key] = complete;
   write(KEYS.taskCompletion, map);
 }
 

@@ -4,11 +4,9 @@ import Link from "next/link";
 import type { Task } from "@/content/curriculum";
 import { getTasks, getWeek } from "@/lib/queries";
 import { isWeekLocked } from "@/lib/stages";
-import { useTaskComplete } from "@/hooks/useTaskComplete";
+import { useDayDone } from "@/hooks/useDayDone";
 import { useCurrentWeek } from "@/hooks/useCurrentWeek";
 import { useTodayDayNumber } from "@/hooks/useTodayDayNumber";
-import { RevealSolution } from "@/components/RevealSolution";
-import { splitInstruction } from "@/lib/instruction";
 import { weekdayShort } from "@/lib/dates";
 
 const KIND_COLOR: Record<Task["kind"], string> = {
@@ -58,64 +56,32 @@ function TaskRow({
   isToday: boolean;
   locked: boolean;
 }) {
-  const [done, toggle] = useTaskComplete(weekNumber, task.day);
-  const { body, proveIt } = splitInstruction(task.instruction);
+  const done = useDayDone(weekNumber, task);
 
   return (
     <li
-      className={`grid grid-cols-[22px_1fr] gap-3 rounded-2xl border p-4 ${
-        isToday ? "border-amber bg-amber-soft" : "border-line bg-panel"
-      } ${done ? "opacity-60" : ""}`}
+      data-testid={`day-${task.day}`}
+      data-done={done}
+      className={`rounded-2xl border p-4 ${isToday ? "border-amber bg-amber-soft" : "border-line bg-panel"} ${
+        done ? "opacity-60" : ""
+      }`}
     >
-      <input
-        type="checkbox"
-        data-testid={`task-${task.day}`}
-        checked={done}
-        onChange={toggle}
-        disabled={locked}
-        className={`mt-1 accent-cyan ${locked ? "cursor-not-allowed opacity-40" : ""}`}
-      />
-      <div>
-        <div className="flex items-baseline gap-2">
-          <span className="font-mono text-xs text-dim">
-            DAY {task.day} · {weekdayShort(task.day)}
-          </span>
-          <span className={`font-mono text-xs uppercase ${KIND_COLOR[task.kind]}`}>
-            {isToday ? "today · " : ""}
-            {task.kind}
-          </span>
-          <Link
-            href={`/week/${weekNumber}/day/${task.day}`}
-            className="ml-auto font-mono text-xs text-cyan"
-          >
-            Open day →
-          </Link>
-        </div>
-        <h3 className="mt-1 font-heading text-base font-semibold">{task.title}</h3>
-        <p className="mt-1 text-sm text-muted">{body}</p>
-        {proveIt && (
-          <div className="mt-2 rounded-r-xl border-l-2 border-cyan bg-cyan/5 px-3 py-2">
-            <span className="font-mono text-xs uppercase text-cyan">Prove it</span>
-            <p className="mt-1 text-sm">{proveIt}</p>
-          </div>
-        )}
-        {task.code && (
-          <pre className="mt-2 overflow-x-auto rounded-lg border border-line bg-background p-3 font-mono text-xs">
-            {task.code}
-          </pre>
-        )}
-        {task.solution && <RevealSolution solution={task.solution} />}
-        {task.resource && (
-          <a
-            href={task.resource.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-2 inline-block rounded-lg border border-cyan/35 px-2.5 py-1.5 text-xs text-cyan"
-          >
-            ↗ {task.resource.label}
-          </a>
-        )}
+      <div className="flex items-baseline gap-2">
+        <span className="font-mono text-xs text-dim">
+          DAY {task.day} · {weekdayShort(task.day)}
+        </span>
+        <span className={`font-mono text-xs uppercase ${KIND_COLOR[task.kind]}`}>
+          {isToday ? "today · " : ""}
+          {task.kind}
+        </span>
+        {done && <span className="font-mono text-xs text-green">✓</span>}
+        {locked && <span className="font-mono text-xs text-dim">locked</span>}
+        <Link href={`/week/${weekNumber}/day/${task.day}`} className="ml-auto font-mono text-xs text-cyan">
+          Open day →
+        </Link>
       </div>
+      <h3 className="mt-1 font-heading text-base font-semibold">{task.title}</h3>
+      <p className="mt-1 text-sm text-muted">{task.concept}</p>
     </li>
   );
 }

@@ -4,9 +4,9 @@ import {
   deleteJournalEntry,
   getCurrentWeek,
   getJournalEntries,
-  isTaskComplete,
+  isUnitComplete,
   setCurrentWeek,
-  setTaskComplete,
+  setUnitComplete,
 } from "./storage";
 
 beforeEach(() => {
@@ -24,22 +24,22 @@ describe("current week", () => {
   });
 });
 
-describe("task completion", () => {
+describe("unit completion", () => {
   it("is false before anything is set", () => {
-    expect(isTaskComplete(1, 1)).toBe(false);
+    expect(isUnitComplete("1:1:ex:0")).toBe(false);
   });
 
-  it("round-trips completion per week/day", () => {
-    setTaskComplete(2, 3, true);
-    expect(isTaskComplete(2, 3)).toBe(true);
-    expect(isTaskComplete(2, 4)).toBe(false);
-    expect(isTaskComplete(3, 3)).toBe(false);
+  it("round-trips completion per key", () => {
+    setUnitComplete("2:3:ex:0", true);
+    expect(isUnitComplete("2:3:ex:0")).toBe(true);
+    expect(isUnitComplete("2:3:ex:1")).toBe(false);
+    expect(isUnitComplete("2:4:ex:0")).toBe(false);
   });
 
   it("can be unset again", () => {
-    setTaskComplete(1, 1, true);
-    setTaskComplete(1, 1, false);
-    expect(isTaskComplete(1, 1)).toBe(false);
+    setUnitComplete("1:1:prove", true);
+    setUnitComplete("1:1:prove", false);
+    expect(isUnitComplete("1:1:prove")).toBe(false);
   });
 });
 
@@ -80,8 +80,8 @@ describe("resilience", () => {
 
     expect(() => getCurrentWeek()).not.toThrow();
     expect(() => setCurrentWeek(1)).not.toThrow();
-    expect(() => isTaskComplete(1, 1)).not.toThrow();
-    expect(() => setTaskComplete(1, 1, true)).not.toThrow();
+    expect(() => isUnitComplete("1:1:ex:0")).not.toThrow();
+    expect(() => setUnitComplete("1:1:ex:0", true)).not.toThrow();
     expect(() => getJournalEntries()).not.toThrow();
     expect(() => addJournalEntry({ week: 1, day: 1, text: "x" })).not.toThrow();
 

@@ -1,13 +1,13 @@
 "use client";
 
-import { getTotalTaskCount, getWeeks } from "@/lib/queries";
+import { getTotalUnitCount, getWeeks } from "@/lib/queries";
 import { useCurrentWeek } from "@/hooks/useCurrentWeek";
-import { useCompletedTaskCount } from "@/hooks/useCompletedTaskCount";
+import { useCompletedUnitCount } from "@/hooks/useCompletedUnitCount";
 
 export function HeaderStats() {
   const currentWeek = useCurrentWeek() ?? 1;
-  const completed = useCompletedTaskCount();
-  const total = getTotalTaskCount();
+  const completed = useCompletedUnitCount();
+  const total = getTotalUnitCount();
   const totalWeeks = getWeeks().length;
   const percent = total === 0 ? 0 : Math.round((completed / total) * 100);
 

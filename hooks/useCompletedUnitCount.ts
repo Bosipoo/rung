@@ -2,14 +2,17 @@
 
 import { useSyncExternalStore } from "react";
 import { curriculum, weekTasks } from "@/content/curriculum";
-import { isTaskComplete, subscribe } from "@/lib/storage";
+import { taskUnitRefs, unitKey } from "@/lib/units";
+import { isUnitComplete, subscribe } from "@/lib/storage";
 
-// Mirrors getTotalTaskCount()'s rest-day exclusion so completed/total stay comparable.
 function countCompleted(): number {
   let count = 0;
   for (const week of curriculum.weeks) {
     for (const task of weekTasks(week)) {
-      if (task.kind !== "rest" && isTaskComplete(week.number, task.day)) count++;
+      if (task.kind === "rest") continue;
+      for (const ref of taskUnitRefs(week.number, task)) {
+        if (isUnitComplete(unitKey(ref))) count++;
+      }
     }
   }
   return count;
@@ -19,6 +22,6 @@ function getServerSnapshot(): number {
   return 0;
 }
 
-export function useCompletedTaskCount(): number {
+export function useCompletedUnitCount(): number {
   return useSyncExternalStore(subscribe, countCompleted, getServerSnapshot);
 }

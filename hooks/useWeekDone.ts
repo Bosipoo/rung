@@ -2,7 +2,8 @@
 
 import { useCallback, useSyncExternalStore } from "react";
 import { weekTasks, type Week } from "@/content/curriculum";
-import { isTaskComplete, subscribe } from "@/lib/storage";
+import { isDayDone } from "@/lib/units";
+import { isUnitComplete, subscribe } from "@/lib/storage";
 
 function getServerSnapshot(): boolean {
   return false;
@@ -13,7 +14,7 @@ export function useWeekDone(week: Week): boolean {
     () =>
       weekTasks(week)
         .filter((task) => task.kind !== "rest")
-        .every((task) => isTaskComplete(week.number, task.day)),
+        .every((task) => isDayDone(week.number, task, isUnitComplete)),
     [week],
   );
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
