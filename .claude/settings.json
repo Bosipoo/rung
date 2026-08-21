@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(curl -s -o /tmp/home.html -w \"%{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s -o /tmp/week1.html -w \"%{http_code}\\\\n\" http://localhost:3000/week/1)",
+      "Bash(curl -s -o /tmp/week27.html -w \"%{http_code}\\\\n\" http://localhost:3000/week/27)",
+      "Bash(curl -s -o /tmp/weekabc.html -w \"%{http_code}\\\\n\" http://localhost:3000/week/abc)",
+      "Bash(curl -s -o /tmp/week0.html -w \"%{http_code}\\\\n\" http://localhost:3000/week/0)",
+      "Bash(npx playwright *)",
+      "Bash(curl -s http://localhost:3000/week/1 -o /tmp/week1v2.html)",
+      "Bash(curl -s http://localhost:3000/week/1 -o /tmp/week1v3.html)"
+    ]
+  }
+}

@@ -1,0 +1,191 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>rung — redesign mockup</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0E0F1E;--panel:#171932;--panel2:#1F2245;--line:rgba(255,255,255,.08);--line2:rgba(255,255,255,.16);
+--ink:#ECEAF6;--muted:#9391B4;--dim:#6D6B8C;--amber:#FFB13C;--amber-soft:rgba(255,177,60,.12);--cyan:#46D6DE;--green:#8CE99A;--coral:#FF6B8A;
+--mono:'JetBrains Mono',monospace;--disp:'Space Grotesk',sans-serif;--body:'Inter',sans-serif}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 var(--body);-webkit-font-smoothing:antialiased}
+a{color:inherit}.wrap{max-width:900px;margin:0 auto;padding:0 20px}
+.mono{font-family:var(--mono)}.k{font-family:var(--mono);font-size:11.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+header{position:sticky;top:0;z-index:5;background:rgba(14,15,30,.8);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header .wrap{height:56px;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{font:700 17px var(--mono)}.brand b{color:var(--cyan)}
+.stats{display:flex;align-items:center;gap:14px;font:12.5px var(--mono);color:var(--muted)}
+.stats b{color:var(--ink)}.bar{width:110px;height:6px;border-radius:6px;background:var(--panel2);overflow:hidden}.bar i{display:block;height:100%;width:9%;background:var(--cyan)}
+.flame{color:var(--amber)}
+.tabs{display:flex;gap:6px;margin:22px 0 0}.tab{font:500 13px var(--mono);padding:7px 12px;border-radius:8px;border:1px solid var(--line);color:var(--muted);cursor:pointer;background:transparent}
+.tab.on{color:var(--ink);border-color:var(--line2);background:var(--panel)}
+section{display:none}section.on{display:block}
+
+/* ---------- TODAY ---------- */
+.today{margin-top:18px;border:1px solid rgba(255,177,60,.45);border-radius:18px;background:linear-gradient(180deg,var(--amber-soft),var(--panel) 40%);padding:24px 26px 22px;box-shadow:0 30px 60px -40px rgba(255,177,60,.5)}
+.today .top{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap}
+.today .k{color:var(--amber)}
+.today h1{font:700 clamp(26px,4.5vw,36px)/1.1 var(--disp);letter-spacing:-.02em;margin:8px 0 6px}
+.today .concept{color:var(--muted);font-size:16px;max-width:640px;margin:0}
+.prove{margin-top:16px;border-left:3px solid var(--cyan);background:rgba(70,214,222,.07);border-radius:0 12px 12px 0;padding:12px 16px}
+.prove .k{color:var(--cyan)}.prove p{margin:4px 0 0;font-size:15.5px}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.btn{font:600 14px var(--body);padding:11px 16px;border-radius:11px;border:1px solid var(--line2);background:var(--panel2);color:var(--ink);cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+.btn.primary{background:var(--cyan);color:#0E0F1E;border-color:var(--cyan)}
+.btn.done{background:transparent}.btn.done.on{border-color:var(--green);color:var(--green)}
+.btn small{font:500 12px var(--mono);opacity:.75}
+.push{margin-left:auto;font:12px var(--mono);color:var(--dim)}
+
+/* ---------- WEEK STRIP ---------- */
+.week{margin-top:26px}
+.week .hd{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:12px}
+.week h2{font:600 19px var(--disp);margin:0}.week .hd a{font:12.5px var(--mono);color:var(--cyan);text-decoration:none}
+.days{display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+.day{border:1px solid var(--line);border-radius:12px;background:var(--panel);padding:10px 10px 11px;min-height:96px;display:flex;flex-direction:column;gap:4px;cursor:pointer;position:relative}
+.day .d{font:600 11px var(--mono);color:var(--dim);letter-spacing:.06em}
+.day .kind{font:700 10px var(--mono);letter-spacing:.12em;text-transform:uppercase}
+.day .t{font:600 13px var(--disp);line-height:1.25;margin-top:2px}
+.day.learn .kind{color:var(--cyan)}.day.build .kind{color:var(--coral)}.day.challenge .kind{color:#A98BFF}.day.rest .kind{color:var(--dim)}
+.day.done{opacity:.55}.day.done::after{content:"✓";position:absolute;top:8px;right:9px;color:var(--green);font:700 12px var(--mono)}
+.day.now{border-color:var(--amber);background:linear-gradient(180deg,var(--amber-soft),var(--panel));box-shadow:0 0 0 1px var(--amber)}
+.day.now .d{color:var(--amber)}
+@media(max-width:640px){.days{grid-template-columns:repeat(4,1fr)}}
+.build{margin-top:12px;border:1px dashed var(--line2);border-radius:12px;padding:12px 15px;display:flex;gap:14px;align-items:baseline;flex-wrap:wrap}
+.build .k{color:var(--coral)}.build b{font:600 15px var(--disp)}.build span{color:var(--muted);font-size:14px}
+.build .stretch{color:var(--dim);font-size:13px}
+
+/* ---------- ROADMAP ---------- */
+.map{margin-top:34px;padding-bottom:60px}
+.map h2{font:600 19px var(--disp);margin:0 0 4px}.map p{margin:0 0 14px;color:var(--muted);font-size:14px}
+.stage{display:grid;grid-template-columns:110px 1fr;gap:14px;align-items:center;padding:10px 0;border-top:1px solid var(--line)}
+.stage .nm{font:600 14px var(--disp)}.stage .nm small{display:block;font:11px var(--mono);color:var(--dim);margin-top:2px}
+.tiles{display:flex;gap:6px;flex-wrap:wrap}
+.tile{width:44px;height:44px;border-radius:9px;border:1px solid var(--line);background:var(--panel);display:grid;place-items:center;font:600 12px var(--mono);color:var(--muted);cursor:pointer;position:relative}
+.tile:hover{border-color:var(--line2);color:var(--ink)}
+.tile.done{background:rgba(140,233,154,.1);border-color:rgba(140,233,154,.35);color:var(--green)}
+.tile.now{background:var(--amber);color:#0E0F1E;border-color:var(--amber);font-weight:700}
+.tile.locked{opacity:.4}
+.tile[data-t]:hover::after{content:attr(data-t);position:absolute;bottom:52px;left:50%;transform:translateX(-50%);white-space:nowrap;background:var(--panel2);border:1px solid var(--line2);border-radius:8px;padding:6px 10px;font:12px var(--body);color:var(--ink);z-index:2}
+.gate{width:auto;padding:0 10px;font-size:11px;border-style:dashed;color:var(--amber);border-color:rgba(255,177,60,.4)}
+@media(max-width:560px){.stage{grid-template-columns:1fr;gap:8px}}
+
+/* ---------- WEEK VIEW ---------- */
+.wv{margin-top:18px}
+.wv .hero{border:1px solid var(--line2);border-radius:16px;background:var(--panel);padding:20px 22px}
+.wv .hero h1{font:700 26px/1.15 var(--disp);margin:6px 0 4px;letter-spacing:-.02em}
+.wv .hero p{color:var(--muted);margin:0}
+.wv .hero .row{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:14px}
+.wv .hero .row b{font-family:var(--disp)}
+.list{margin-top:14px;display:flex;flex-direction:column;gap:8px}
+.item{border:1px solid var(--line);border-radius:14px;background:var(--panel);padding:14px 16px;display:grid;grid-template-columns:22px 1fr;gap:14px}
+.item.now{border-color:var(--amber);background:linear-gradient(180deg,var(--amber-soft),var(--panel))}
+.cb{width:20px;height:20px;border-radius:6px;border:1.6px solid var(--line2);margin-top:3px;display:grid;place-items:center;font:700 12px var(--mono);color:#0E0F1E;cursor:pointer}
+.item.done .cb{background:var(--green);border-color:var(--green)}
+.item .meta{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.item .meta .d{font:600 11px var(--mono);color:var(--dim)}
+.item h3{font:600 16px var(--disp);margin:2px 0 4px}
+.item p{margin:0;color:var(--muted);font-size:14.5px}
+.item .prove{margin-top:10px;padding:9px 13px}.item .prove p{color:var(--ink);font-size:14.5px}
+.item .res{margin-top:10px;display:inline-flex;align-items:center;gap:6px;font:500 13px var(--body);color:var(--cyan);text-decoration:none;border:1px solid rgba(70,214,222,.35);border-radius:8px;padding:6px 10px}
+pre{margin:10px 0 0;background:#0B0C18;border:1px solid var(--line);border-radius:10px;padding:12px 14px;font:13px/1.55 var(--mono);color:#D7D5EA;overflow:auto}
+.reveal{margin-top:8px}
+.reveal summary{cursor:pointer;font:500 13px var(--mono);color:#A98BFF;list-style:none}
+.reveal summary::before{content:"▸ "}.reveal[open] summary::before{content:"▾ "}
+.reveal div{margin-top:8px;padding:10px 13px;border-radius:10px;background:rgba(169,139,255,.08);border:1px solid rgba(169,139,255,.3);font-size:14px}
+.item.done h3,.item.done p{opacity:.6}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+  <div class="brand"><b>rung</b></div>
+  <div class="stats"><span class="flame">🔥 <b>3</b> day streak</span><span>week <b>1</b>/26</span><div class="bar"><i></i></div><span><b>14</b>/156</span></div>
+</div></header>
+
+<div class="wrap">
+<div class="tabs"><button class="tab on" data-v="home">Home (Today)</button><button class="tab" data-v="week">Week 1 view</button></div>
+
+<!-- ================= HOME ================= -->
+<section id="home" class="on">
+  <div class="today">
+    <div class="top">
+      <span class="k">Wednesday · Week 1 · Day 3 of 6 · Learn</span>
+      <span class="mono" style="font-size:12px;color:var(--dim)">~55 min</span>
+    </div>
+    <h1>Numbers</h1>
+    <p class="concept">int vs float, <span class="mono">+ − * /</span>, <span class="mono">//</span> and <span class="mono">%</span>, converting input to numbers. Learn the trap: <span class="mono">input()</span> always gives you text.</p>
+    <div class="prove"><span class="k">Prove it</span><p>A tip calculator that splits a bill between friends and rounds correctly.</p></div>
+    <div class="actions">
+      <a class="btn primary" href="#">Open Futurecoder <small>→ Storing calculations in variables</small></a>
+      <button class="btn done" id="doneBtn">☐ Mark done</button>
+      <span class="push mono">push → week-01/day-03-tip.py</span>
+    </div>
+  </div>
+
+  <div class="week">
+    <div class="hd"><h2>This week — Talk to the machine</h2><a href="#" data-go="week">Open the full week →</a></div>
+    <div class="days">
+      <div class="day learn done"><span class="d">MON</span><span class="kind">Learn</span><span class="t">Set up like a developer</span></div>
+      <div class="day learn done"><span class="d">TUE</span><span class="kind">Learn</span><span class="t">Variables, input, strings</span></div>
+      <div class="day learn now"><span class="d">WED</span><span class="kind">Learn</span><span class="t">Numbers</span></div>
+      <div class="day learn"><span class="d">THU</span><span class="kind">Learn</span><span class="t">Decisions</span></div>
+      <div class="day build"><span class="d">FRI</span><span class="kind">Build</span><span class="t">Mad Libs, hard mode</span></div>
+      <div class="day challenge"><span class="d">SAT</span><span class="kind">Challenge</span><span class="t">Katas + debug drill</span></div>
+      <div class="day rest"><span class="d">SUN</span><span class="kind">Rest</span><span class="t">Off.</span></div>
+    </div>
+    <div class="build"><span class="k">Friday's build</span><b>Mad Libs — hard mode</b><span>A story that changes depending on the answers, not just fills in blanks.</span><span class="stretch">+ stretch: a third branch and a running word count</span></div>
+  </div>
+
+  <div class="map">
+    <h2>The road</h2>
+    <p>26 weeks. Hover a tile for its topic; tap to open. Locked stages open when your mentor signs the gate.</p>
+    <div class="stage"><div class="nm">Python<small>learning to think · 11 wks</small></div><div class="tiles">
+      <div class="tile now" data-t="Talk to the machine">1</div><div class="tile" data-t="Repetition">2</div><div class="tile" data-t="Functions">3</div><div class="tile" data-t="Lists">4</div><div class="tile" data-t="Dictionaries">5</div><div class="tile" data-t="Strings & randomness">6</div><div class="tile" data-t="When things go wrong">7</div><div class="tile" data-t="Files & persistence">8</div><div class="tile" data-t="Organising code">9</div><div class="tile" data-t="Thinking in algorithms">10</div><div class="tile" data-t="Python capstone">11</div><div class="tile gate">gate</div>
+    </div></div>
+    <div class="stage"><div class="nm">HTML<small>structure · 2 wks</small></div><div class="tiles"><div class="tile locked" data-t="HTML, properly">12</div><div class="tile locked" data-t="Forms & accessibility">13</div><div class="tile gate locked">gate</div></div></div>
+    <div class="stage"><div class="nm">CSS<small>making it look good · 4 wks</small></div><div class="tiles"><div class="tile locked">14</div><div class="tile locked">15</div><div class="tile locked">16</div><div class="tile locked">17</div><div class="tile gate locked">gate</div></div></div>
+    <div class="stage"><div class="nm">JavaScript<small>making it alive · 9 wks</small></div><div class="tiles"><div class="tile locked">18</div><div class="tile locked">19</div><div class="tile locked">20</div><div class="tile locked">21</div><div class="tile locked">22</div><div class="tile locked">23</div><div class="tile locked">24</div><div class="tile locked">25</div><div class="tile locked">26</div></div></div>
+  </div>
+</section>
+
+<!-- ================= WEEK VIEW ================= -->
+<section id="week">
+  <div class="wv">
+    <div class="hero">
+      <span class="k">Week 1 · Python</span>
+      <h1>Talk to the machine</h1>
+      <p>variables, print, input, f-strings, string methods, numbers, if/elif/else</p>
+      <div class="row"><span><b>Build:</b> Mad Libs — hard mode</span><span style="color:var(--muted)"><b>Stretch:</b> a third branch and a running word count</span><span class="mono" style="color:var(--dim)">week-01/</span></div>
+    </div>
+    <div class="list">
+      <div class="item done"><div class="cb">✓</div><div><div class="meta"><span class="d">DAY 1 · MON</span><span class="k" style="color:var(--cyan)">learn</span></div><h3>Set up like a developer</h3><p>Install Python + VS Code, create a GitHub repo called coding-journey with a week-01 folder. Learn three commands only: git add ., git commit -m 'message', git push.</p><div class="prove"><span class="k">Prove it</span><p>A hello.py that prints your name, committed and visible on GitHub.</p></div><a class="res" href="#">↗ GitHub Docs — get started</a></div></div>
+      <div class="item done"><div class="cb">✓</div><div><div class="meta"><span class="d">DAY 2 · TUE</span><span class="k" style="color:var(--cyan)">learn</span></div><h3>Variables, input, strings</h3><p>Variables, print, input(), f-strings, .upper() .lower() len().</p><div class="prove"><span class="k">Prove it</span><p>A profile card that takes name + birth year and prints a formatted card with your age AND your name in uppercase and reversed. Reversing isn't spoon-fed — work it out.</p></div><a class="res" href="#">↗ Futurecoder → Introducing strings</a></div></div>
+      <div class="item now"><div class="cb"></div><div><div class="meta"><span class="d">DAY 3 · WED</span><span class="k" style="color:var(--amber)">today · learn</span></div><h3>Numbers</h3><p>int vs float, + − * /, // and %, converting input to numbers. Learn the trap: input() always gives you text.</p><div class="prove"><span class="k">Prove it</span><p>A tip calculator that splits a bill between friends and rounds correctly.</p></div><a class="res" href="#">↗ Futurecoder → Storing calculations in variables</a></div></div>
+      <div class="item"><div class="cb"></div><div><div class="meta"><span class="d">DAY 4 · THU</span><span class="k" style="color:var(--cyan)">learn</span></div><h3>Decisions</h3><p>if/elif/else, comparisons, and/or/not.</p><div class="prove"><span class="k">Prove it</span><p>A grade calculator that refuses a mark over 100 or below 0. Then three drills, no notes: swap two variables without a third; format any name as 'LAST, First'; convert temperature both directions.</p></div><a class="res" href="#">↗ Futurecoder → Introducing if statements</a></div></div>
+      <div class="item"><div class="cb"></div><div><div class="meta"><span class="d">DAY 5 · FRI</span><span class="k" style="color:var(--coral)">build</span></div><h3>Mad Libs, hard mode</h3><p>Ask for words and stitch a story — but a name over 6 letters gets a different opening, and an age under 13 branches the ending. Conditionals inside string-building.</p><p class="mono" style="margin-top:8px;font-size:12.5px;color:var(--dim)">push → week-01/day-05-madlibs.py</p></div></div>
+      <div class="item"><div class="cb"></div><div><div class="meta"><span class="d">DAY 6 · SAT</span><span class="k" style="color:#A98BFF">challenge</span></div><h3>Two 8-kyu string katas + the debug drill</h3><p>Read the code and find the bugs BEFORE running it. Fix them. Then reveal.</p>
+<pre>name = input("Name: ")
+age = input("Age: ")
+if age > 18
+    print("Adult: " + name)
+else:
+    print("Minor: " name)</pre>
+<details class="reveal"><summary>Reveal solution</summary><div>1) age is text — int(input("Age: ")) before comparing. 2) The if line is missing its colon. 3) "Minor: " name is missing the + (or use an f-string).</div></details>
+<a class="res" href="#">↗ Codewars — 8 kyu Python</a></div></div>
+      <div class="item"><div class="cb"></div><div><div class="meta"><span class="d">DAY 7 · SUN</span><span class="k" style="color:var(--dim)">rest</span></div><h3>Rest</h3><p>Genuinely off. Your brain files the week away while you're not looking.</p></div></div>
+    </div>
+  </div>
+</section>
+</div>
+
+<script>
+const show=v=>{document.querySelectorAll('section').forEach(s=>s.classList.toggle('on',s.id===v));document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('on',t.dataset.v===v));window.scrollTo(0,0)};
+document.querySelectorAll('.tab').forEach(t=>t.onclick=()=>show(t.dataset.v));
+document.querySelectorAll('[data-go]').forEach(a=>a.onclick=e=>{e.preventDefault();show(a.dataset.go)});
+document.querySelectorAll('.day').forEach(d=>d.onclick=()=>show('week'));
+document.querySelectorAll('.tile:not(.locked):not(.gate)').forEach(t=>t.onclick=()=>show('week'));
+document.querySelectorAll('.cb').forEach(c=>c.onclick=()=>{c.closest('.item').classList.toggle('done');c.textContent=c.closest('.item').classList.contains('done')?'✓':''});
+const db=document.getElementById('doneBtn');db.onclick=()=>{db.classList.toggle('on');db.textContent=db.classList.contains('on')?'✓ Done for today':'☐ Mark done'};
+</script>
+</body>
+</html>

@@ -1,26 +1,43 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #0e0f1e;
+  --foreground: #ecebf6;
+  --color-panel: #171932;
+  --color-panel-2: #1f2245;
+  --color-line: rgba(255, 255, 255, 0.08);
+  --color-line-2: rgba(255, 255, 255, 0.16);
+  --color-muted: #9391b4;
+  --color-dim: #6d6b8c;
+  --color-amber: #ffb13c;
+  --color-amber-soft: rgba(255, 177, 60, 0.12);
+  --color-cyan: #46d6de;
+  --color-green: #8ce99a;
+  --color-coral: #ff6b8a;
+  --color-violet: #a98bff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-panel: var(--color-panel);
+  --color-panel-2: var(--color-panel-2);
+  --color-line: var(--color-line);
+  --color-line-2: var(--color-line-2);
+  --color-muted: var(--color-muted);
+  --color-dim: var(--color-dim);
+  --color-amber: var(--color-amber);
+  --color-amber-soft: var(--color-amber-soft);
+  --color-cyan: var(--color-cyan);
+  --color-green: var(--color-green);
+  --color-coral: var(--color-coral);
+  --color-violet: var(--color-violet);
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-space-grotesk);
+  --font-mono: var(--font-jetbrains-mono);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
 }
