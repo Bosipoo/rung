@@ -5,7 +5,7 @@
 // completion, so "day done" and "week done" are always computed, never a
 // separate flag.
 
-import type { Task } from "@/content/curriculum";
+import { weekTasks, type Task, type Week } from "@/content/curriculum";
 
 export type UnitKind = "lesson" | "ex" | "prove";
 
@@ -33,4 +33,11 @@ export function taskUnitRefs(week: number, task: Task): UnitRef[] {
 export function isDayDone(week: number, task: Task, isComplete: (key: string) => boolean): boolean {
   const refs = taskUnitRefs(week, task);
   return refs.length > 0 && refs.every((ref) => isComplete(unitKey(ref)));
+}
+
+// A week is done when every one of its non-rest days is done.
+export function isWeekDone(week: Week, isComplete: (key: string) => boolean): boolean {
+  return weekTasks(week)
+    .filter((task) => task.kind !== "rest")
+    .every((task) => isDayDone(week.number, task, isComplete));
 }

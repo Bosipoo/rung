@@ -53,7 +53,11 @@ export function getCurrentWeek(): number | null {
   return read<number | null>(KEYS.currentWeek, null);
 }
 
+// Forward-only: the stored override never moves backward, so a stray or
+// accidental lower value can't regress a learner who's jumped ahead.
 export function setCurrentWeek(week: number): void {
+  const current = getCurrentWeek() ?? 1;
+  if (week < current) return;
   write(KEYS.currentWeek, week);
 }
 

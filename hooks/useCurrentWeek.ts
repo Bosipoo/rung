@@ -1,12 +1,22 @@
 "use client";
 
 import { useSyncExternalStore } from "react";
-import { getCurrentWeek, subscribe } from "@/lib/storage";
+import { curriculum } from "@/content/curriculum";
+import { firstIncompleteWeek } from "@/lib/currentWeek";
+import { getCurrentWeek, isUnitComplete, subscribe } from "@/lib/storage";
 
-function getServerSnapshot(): number | null {
-  return null;
+// currentWeek = max(firstIncompleteWeek, storedOverride ?? 1), clamped to the
+// curriculum's range — the frontier week, unless the learner has jumped ahead.
+function getSnapshot(): number {
+  const derived = firstIncompleteWeek(curriculum.weeks, isUnitComplete);
+  const override = getCurrentWeek() ?? 1;
+  return Math.min(Math.max(derived, override), curriculum.weeks.length);
 }
 
-export function useCurrentWeek(): number | null {
-  return useSyncExternalStore(subscribe, getCurrentWeek, getServerSnapshot);
+function getServerSnapshot(): number {
+  return 1;
+}
+
+export function useCurrentWeek(): number {
+  return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

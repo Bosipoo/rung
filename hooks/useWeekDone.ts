@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useSyncExternalStore } from "react";
-import { weekTasks, type Week } from "@/content/curriculum";
-import { isDayDone } from "@/lib/units";
+import type { Week } from "@/content/curriculum";
+import { isWeekDone } from "@/lib/units";
 import { isUnitComplete, subscribe } from "@/lib/storage";
 
 function getServerSnapshot(): boolean {
@@ -10,12 +10,6 @@ function getServerSnapshot(): boolean {
 }
 
 export function useWeekDone(week: Week): boolean {
-  const getSnapshot = useCallback(
-    () =>
-      weekTasks(week)
-        .filter((task) => task.kind !== "rest")
-        .every((task) => isDayDone(week.number, task, isUnitComplete)),
-    [week],
-  );
+  const getSnapshot = useCallback(() => isWeekDone(week, isUnitComplete), [week]);
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }

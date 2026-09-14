@@ -11,5 +11,14 @@ export default defineConfig({
     url: "http://localhost:3000",
     reuseExistingServer: !process.env.CI,
   },
-  projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
+  projects: [
+    { name: "chromium", use: { ...devices["Desktop Chrome"] }, testIgnore: /mobile\.spec\.ts/ },
+    // 375px viewport on Chromium (no extra browser download) — scoped to
+    // mobile-specific checks so the rest of the suite isn't run twice.
+    {
+      name: "mobile",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 375, height: 667 } },
+      testMatch: /mobile\.spec\.ts/,
+    },
+  ],
 });

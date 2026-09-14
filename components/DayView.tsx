@@ -161,19 +161,27 @@ function UnitRow({
   children: ReactNode;
 }) {
   const [done, toggle] = useUnit({ week, day: task.day, kind, index });
+  const id = `unit-${week}-${task.day}-${kind}-${index}`;
 
   return (
     <li className="flex items-start gap-2 text-sm">
       {!locked && (
         <input
           type="checkbox"
+          id={id}
           checked={done}
           onChange={toggle}
-          data-testid={`unit-${week}-${task.day}-${kind}-${index}`}
+          data-testid={id}
           className="mt-1 accent-cyan"
         />
       )}
-      <span className={done && !locked ? "text-muted line-through" : ""}>{children}</span>
+      {locked ? (
+        <span>{children}</span>
+      ) : (
+        <label htmlFor={id} className={done ? "text-muted line-through" : ""}>
+          {children}
+        </label>
+      )}
     </li>
   );
 }

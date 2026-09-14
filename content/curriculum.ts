@@ -20,7 +20,7 @@
 //    "Search lessons" box finds the named block instantly.
 //  - Official Python tutorial for what Futurecoder doesn't cover.
 
-import { KATAS, kataSearch } from "./katas";
+import { kataFor } from "./katas";
 
 export type Stage = "python" | "html" | "css" | "javascript";
 export type TaskKind = "learn" | "practice" | "build" | "challenge" | "rest";
@@ -73,7 +73,6 @@ const py = (label: string, path: string) => r(`Python tutorial — ${label}`, `h
 const pylib = (label: string, mod: string) => r(`Python docs — ${label}`, `https://docs.python.org/3/library/${mod}.html`);
 const GITHUB = r("GitHub Docs — get started", "https://docs.github.com/en/get-started");
 const GH_PAGES = r("GitHub Pages", "https://pages.github.com/");
-const CODEWARS_JS = r("Codewars — JavaScript (filter to 8 kyu)", "https://www.codewars.com/kata/search/javascript");
 const CLASH = r("CodinGame — Clash of Code", "https://www.codingame.com/multiplayer/clashofcode");
 const VALIDATOR = r("W3C HTML validator", "https://validator.w3.org/");
 
@@ -1799,12 +1798,8 @@ export const curriculum: Curriculum = { slug: "coding-journey", title: "Coding J
 // --- derived days -------------------------------------------------------------
 
 export function weekTasks(week: Week): Task[] {
-  const lesson =
-    week.stage === "python"
-      ? week.number >= 9
-        ? [...(KATAS[week.number] ?? [kataSearch()]), CLASH]
-        : (KATAS[week.number] ?? [kataSearch()])
-      : [week.number >= 9 ? CLASH : CODEWARS_JS];
+  const katas = kataFor(week.number);
+  const lesson = week.number >= 9 ? [...katas, CLASH] : katas;
   const challenge: Task = {
     day: 6, kind: "challenge", title: "Challenge day",
     concept: `${week.katas}. Then the debug drill: read the code and find the bugs BEFORE running it, fix them, then reveal the solution.`,

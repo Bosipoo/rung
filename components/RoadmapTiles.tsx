@@ -14,7 +14,7 @@ export function RoadmapTiles() {
   const currentStageIndex = STAGE_ORDER.indexOf(currentStage ?? STAGE_ORDER[0]);
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="-mx-1 flex flex-col gap-3 overflow-x-clip px-1">
       {STAGE_ORDER.map((stage, stageIndex) => (
         <div
           key={stage}
@@ -61,7 +61,7 @@ function RoadmapTile({
   const content = (
     <>
       {week.number}
-      <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-line-2 bg-panel-2 px-2.5 py-1.5 font-sans text-xs font-normal normal-case text-foreground opacity-0 transition-opacity group-hover:opacity-100">
+      <span className="pointer-events-none absolute bottom-full left-1/2 z-10 mb-2 -translate-x-1/2 whitespace-nowrap rounded-md border border-line-2 bg-panel-2 px-2.5 py-1.5 font-sans text-xs font-normal normal-case text-foreground opacity-0 transition-opacity group-hover:opacity-100 group-focus-visible:opacity-100">
         {week.topic}
       </span>
     </>

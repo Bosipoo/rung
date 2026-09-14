@@ -22,6 +22,12 @@ describe("current week", () => {
     setCurrentWeek(5);
     expect(getCurrentWeek()).toBe(5);
   });
+
+  it("is forward-only: a lower value is ignored", () => {
+    setCurrentWeek(5);
+    setCurrentWeek(2);
+    expect(getCurrentWeek()).toBe(5);
+  });
 });
 
 describe("unit completion", () => {

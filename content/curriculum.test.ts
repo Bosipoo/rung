@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { curriculum, taskUnits, weekTasks } from "./curriculum";
 import { taskUnitRefs } from "@/lib/units";
+import { KATAS, kataFor } from "./katas";
 
 describe("weekTasks", () => {
   it.each(curriculum.weeks)(
@@ -42,16 +43,35 @@ describe("taskUnits", () => {
   );
 });
 
-describe("challenge-day katas", () => {
-  const pythonWeeks = curriculum.weeks.filter((week) => week.stage === "python");
-
-  it.each(pythonWeeks)("week $number resolves to at least one kata resource, all https", (week) => {
-    const challenge = weekTasks(week).find((task) => task.kind === "challenge")!;
-    const katas = week.number >= 9 ? challenge.lesson!.slice(0, -1) : challenge.lesson!;
-
-    expect(katas.length).toBeGreaterThan(0);
-    for (const resource of katas) {
-      expect(resource.url.startsWith("https://")).toBe(true);
+describe("resource links", () => {
+  it.each(curriculum.weeks)("week $number: every lesson resource is a well-formed https URL", (week) => {
+    for (const task of weekTasks(week)) {
+      for (const resource of task.lesson ?? []) {
+        expect(resource.url.startsWith("https://")).toBe(true);
+        expect(() => new URL(resource.url)).not.toThrow();
+      }
     }
+  });
+});
+
+describe("challenge-day katas", () => {
+  const pythonWeeks = curriculum.weeks.filter((week) => week.number >= 1 && week.number <= 11);
+  const javascriptWeeksWithKatas = curriculum.weeks.filter(
+    (week) => week.stage === "javascript" && week.number in KATAS,
+  );
+
+  it.each([...pythonWeeks, ...javascriptWeeksWithKatas])(
+    "week $number resolves to at least one kata resource, all https",
+    (week) => {
+      const katas = kataFor(week.number);
+      expect(katas.length).toBeGreaterThan(0);
+      for (const resource of katas) {
+        expect(resource.url.startsWith("https://")).toBe(true);
+      }
+    },
+  );
+
+  it.each([28, 29, 30, 31, 34, 35, 36])("week %i has no kata — its challenge is a lab or a build", (weekNumber) => {
+    expect(kataFor(weekNumber)).toEqual([]);
   });
 });

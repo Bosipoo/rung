@@ -1,7 +1,16 @@
+import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { getWeek } from "@/lib/queries";
 import { STAGE_LABEL } from "@/lib/stages";
 import { Checklist } from "@/components/Checklist";
+import { WeekAdvance } from "@/components/WeekAdvance";
+
+export async function generateMetadata({ params }: PageProps<"/week/[n]">): Promise<Metadata> {
+  const { n } = await params;
+  const week = getWeek(Number(n));
+  if (!week) return { title: "Not found | rung" };
+  return { title: `Week ${week.number} — ${week.topic} | rung`, description: week.concepts };
+}
 
 export default async function WeekPage({ params }: PageProps<"/week/[n]">) {
   const { n } = await params;
@@ -30,6 +39,7 @@ export default async function WeekPage({ params }: PageProps<"/week/[n]">) {
           <span className="font-mono text-xs text-dim">{folder}</span>
         </div>
       </div>
+      <WeekAdvance week={week} />
       <Checklist weekNumber={week.number} />
     </main>
   );

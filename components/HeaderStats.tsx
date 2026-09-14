@@ -13,7 +13,7 @@ export function HeaderStats() {
 
   return (
     <div className="flex items-center gap-3 font-mono text-xs text-muted">
-      <span>
+      <span data-testid="header-week">
         week <b className="text-foreground">{currentWeek}</b>/{totalWeeks}
       </span>
       <span className="h-1.5 w-24 overflow-hidden rounded-full bg-panel-2">
